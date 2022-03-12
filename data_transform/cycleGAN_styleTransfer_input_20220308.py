@@ -15,13 +15,16 @@ from PIL import Image
 #    train&bal (B) : canon
 #    test (A)  : topcon, opto
 #    test (B)  : canon
+# 5) L, R 각각 따로
 #
 # 2022.03.08 jieunoh@postech.ac.kr
 # ----------------------------------------------------------------
 
 # 0. augment 설정 ------------------
+whichside = "L" # L아니면 R 
 ori_path = "/home/guest1/ellen_data/SERI2_2_variousCamera"
-gen_path = "/home/guest1/ellen_data/SERI2_2_variousCamera_20220310"
+gen_path = "/home/guest1/ellen_data/SERI2_2_variousCamera_20220312/"+whichside
+
 agroupCamera="canon" #canon, op_(또는 opto), topcon 중에서 
 imageformat = ["jpg", "JPG"]  # 원본 이미지 포멧
 smallest_willbe_bigger_than_this = 10000  # 이미지 사이즈 10000보단 작을 것으로 예상
@@ -95,49 +98,51 @@ j = 1 # 각 step에서 image 개수 세기
 
 # 1. [A group] image  불러오기  ------------------
 for patient_id in os.listdir(ori_path):
-    for image in os.listdir(patient_id): 
-        if (imageformat[0] in image or imageformat[1] in image) and agroupCamera in image:
-            aimg = Image.open(ori_path+"/"+patient_id+"/"+image)
-            i += 1
-            w, h = aimg.size
-            if sw > w:
-                sw = w
-            if sh > h:
-                sh = h
+    if "." not in patient_id:
+        for image in os.listdir(ori_path+"/"+patient_id): 
+            if (imageformat[0] in image or imageformat[1] in image) and agroupCamera in image and whichside in image:
+                aimg = Image.open(ori_path+"/"+patient_id+"/"+image)
+                i += 1
+                w, h = aimg.size
+                if sw > w:
+                    sw = w
+                if sh > h:
+                    sh = h
 
-    #2. real lq image 저장하기 ------------------
-        if step == 0:
-            aimg.save(gen_path+"/trainA/"+patient_id+"_"+image.split(".")[0]+".jpg")
-            # print("["+str(i)+"] trainA saved")
-        #val set
-        if step == 1:
-            aimg.save(gen_path+"/valA/"+patient_id+"_"+image.split(".")[0]+".jpg")
-            # print("["+str(i)+"] valA saved")
-        #test set
-        if step == 2:
-            aimg.save(gen_path+"/testA/"+patient_id+"_"+image.split(".")[0]+".jpg")
-            # print("["+str(i)+"] testA saved")
-        if step ==3: 
-            aimg.save(gen_path+"/testB/"+patient_id+"_"+image.split(".")[0]+".jpg")
-            
-        j += 1
+            #2. real lq image 저장하기 ------------------
+                if step == 0:
+                    aimg.save(gen_path+"/trainA/"+patient_id+"_"+image.split(".")[0]+".jpg")
+                    print("["+str(i)+"] ", patient_id+image," trainA saved")
+                #val set
+                if step == 1:
+                    aimg.save(gen_path+"/valA/"+patient_id+"_"+image.split(".")[0]+".jpg")
+                    print("["+str(i)+"] ", patient_id+image," valA saved")
+                #test set
+                if step == 2:
+                    aimg.save(gen_path+"/testA/"+patient_id+"_"+image.split(".")[0]+".jpg")
+                    print("["+str(i)+"] ",patient_id+ image," testA saved")
+                if step ==3: 
+                    aimg.save(gen_path+"/testB/"+patient_id+"_"+image.split(".")[0]+".jpg")
+                    print("["+str(i)+"] ", patient_id+image," testB saved")
+                    
+                j += 1
 
-        if (i == atrainN):
-            print("===["+str(j-1)+" train set end]============================")
-            j = 1  # 초기화
-            step += 1
+                if (i == atrainN):
+                    print("===["+str(j-1)+" train set end]============================")
+                    j = 1  # 초기화
+                    step += 1
 
-        if (i == (atrainN+avalN)):
-            print("===["+str(j-1)+" val set end]============================")
-            j = 1
-            step += 1
-        
-        if ( i==(atrainN+avalN+atestN)):
-            print("===["+str(j-1)+" test set end]============================")
-            j=1
-            step +=1
+                if (i == (atrainN+avalN)):
+                    print("===["+str(j-1)+" val set end]============================")
+                    j = 1
+                    step += 1
+                
+                if ( i==(atrainN+avalN+atestN)):
+                    print("===["+str(j-1)+" test set end]============================")
+                    j=1
+                    step +=1
 
-print("===["+str(j)+"testB set end]============================")
+print("===["+str(j-1)+"testB set end]============================")
 print("[A group END]===============================================================================\n\n")
 
 
@@ -146,40 +151,41 @@ i = 0
 step = 0
 j = 1
 for patient_id in os.listdir(ori_path):
-    for image in os.listdir(patient_id): 
-        if (imageformat[0] in image or imageformat[1] in image) and agroupCamera not in image:
-            aimg = Image.open(ori_path+"/"+patient_id+"/"+image)
-            i += 1
-            w, h = aimg.size
-            if sw > w:
-                sw = w
-            if sh > h:
-                sh = h
+    if "." not in patient_id:
+        for image in os.listdir(ori_path+"/"+patient_id): 
+            if (imageformat[0] in image or imageformat[1] in image) and agroupCamera not in image and whichside in image:
+                aimg = Image.open(ori_path+"/"+patient_id+"/"+image)
+                i += 1
+                w, h = aimg.size
+                if sw > w:
+                    sw = w
+                if sh > h:
+                    sh = h
 
-    #2. real lq image 저장하기 ------------------
-        if step == 0:
-            aimg.save(gen_path+"/trainB/"+patient_id+"_"+image.split(".")[0]+".jpg")
-            # print("["+str(i)+"] trainA saved")
-        #val set
-        if step == 1:
-            aimg.save(gen_path+"/valB/"+patient_id+"_"+image.split(".")[0]+".jpg")
-            # print("["+str(i)+"] valA saved")
-        #test set
-        if step == 2:
-            aimg.save(gen_path+"/testB/"+patient_id+"_"+image.split(".")[0]+".jpg")
-            # print("["+str(i)+"] testA saved")
-            
-        j += 1
+            #2. real lq image 저장하기 ------------------
+                if step == 0:
+                    aimg.save(gen_path+"/trainB/"+patient_id+"_"+image.split(".")[0]+".jpg")
+                    print("["+str(i)+"] ", patient_id+image," trainB saved")
+                #val set
+                if step == 1:
+                    aimg.save(gen_path+"/valB/"+patient_id+"_"+image.split(".")[0]+".jpg")
+                    print("["+str(i)+"] ", patient_id+image," valB saved")
+                #test set
+                if step == 2:
+                    aimg.save(gen_path+"/testB/"+patient_id+"_"+image.split(".")[0]+".jpg")
+                    print("["+str(i)+"] ", patient_id+image," testB saved")
+                    
+                j += 1
 
-        if (i == atrainN):
-            print("===["+str(j-1)+" train set end]============================")
-            j = 1  # 초기화
-            step += 1
+                if (i == btrainN):
+                    print("===["+str(j-1)+" train set end]============================")
+                    j = 1  # 초기화
+                    step += 1
 
-        if (i == (atrainN+avalN)):
-            print("===["+str(j-1)+" val set end]============================")
-            j = 1
-            step += 1
+                if (i == (btrainN+bvalN)):
+                    print("===["+str(j-1)+" val set end]============================")
+                    j = 1
+                    step += 1
     
 print("===["+str(j-1)+" test set end]============================")
 print("[B group END]===============================================================================\n\n")
