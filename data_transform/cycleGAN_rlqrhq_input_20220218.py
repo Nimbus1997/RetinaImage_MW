@@ -16,19 +16,29 @@ from PIL import Image
 # 참고: https://copycoding.tistory.com/159
 # 0001이런식으로 저장하는 것: .zfill(숫자) https://deep-i.tistory.com/48
 # 2022.02.18 jieunoh@postech.ac.kr
+# adjust 2022.06.22 -> total_image sample을 정할 수 있음 & size도 한번에 정하기
 # ----------------------------------------------------------------
 
 # 0. augment 설정 ------------------
 rhq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/high_Q"
 rlq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/low_Q"  # 원본크기
-gen_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_202202204545"
+gen_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_202206022_256_n1000"
 imageformat="png" #원본 이미지 포멧
+
+# total image개수 정하고 싶으면------------
+set_total = True
+total_img_sample = 1000 #l, h each 
+# ------------------------
+resize= 256
+
+
+trainlR, vallR, testlR = 6, 2, 2  # low quality data의 train : val: test 비율 쓰기
+trainhR, valhR, testhaR, testhbR = 6, 2, 1, 1 # high qualtiy data의 train : val: test 비율 쓰기
 biggerthanthis = 10000  # 10000보단 작을 것으로 예상
 sw = biggerthanthis  # smallst widht 젤작은 width 알아보기 위해서
 sh = biggerthanthis  # smallest height 젤 작은 hieght 알아보기 위해서
-trainlR, vallR, testlR = 6, 2, 2  # low quality data의 train : val: test 비율 쓰기
-# high qualtiy data의 train : val: test 비율 쓰기
-trainhR, valhR, testhaR, testhbR = 6, 2, 0.5, 1.5
+
+# 00. seting 된 parameter 확인  ------------------------ 
 
 print("path check")
 print("rlq_path: ", rlq_path)
@@ -65,7 +75,10 @@ if not os.path.isdir(gen_path+"/testB"):
 # 0-2. dataset 나누기 -train val test 개수------------------
 
 # low qualtiy -> A group
-ltotal_dataset = len(os.listdir(rlq_path))
+if set_total:
+    ltotal_dataset=total_img_sample
+else:
+    ltotal_dataset = len(os.listdir(rlq_path))
 ltrainN = int(float(ltotal_dataset)/10.*float(trainlR))
 lvalN = int(float(ltotal_dataset)/10.*float(valhR))
 ltestN = ltotal_dataset - ltrainN-lvalN
@@ -75,7 +88,10 @@ print("\n-------------------------------")
 print("ldigit: ", ldigit)
 
 # high qualtiy -> B group & A group in test
-htotal_dataset = len(os.listdir(rhq_path))
+if set_total:
+    htotal_dataset=total_img_sample
+else:
+    htotal_dataset = len(os.listdir(rhq_path))
 htrainN = int(float(htotal_dataset)/10.*float(trainhR))
 hvalN = int(float(htotal_dataset)/10.*float(valhR))
 htestaN = int(float(htotal_dataset)/10.*float(testhaR))
@@ -117,15 +133,18 @@ for rlq in os.listdir(rlq_path):
 
     #2. real lq image 저장하기 ------------------
         if step == 0:
-            rlqimg.save(gen_path+"/trainA/"+str(j).zfill(ldigit)+".jpg")
+            img_resize = rlqimg.resize((resize,resize),Image.LANCZOS)
+            img_resize.save(gen_path+"/trainA/"+str(j).zfill(ldigit)+".jpg")
             # print("["+str(i)+"] trainA saved")
         #val set
         if step == 1:
-            rlqimg.save(gen_path+"/valA/"+str(j).zfill(ldigit)+".jpg")
+            img_resize = rlqimg.resize((resize,resize),Image.LANCZOS)
+            img_resize.save(gen_path+"/valA/"+str(j).zfill(ldigit)+".jpg")
             # print("["+str(i)+"] valA saved")
         #test set
         if step == 2:
-            rlqimg.save(gen_path+"/testA/"+str(j).zfill(ldigit)+".jpg")
+            img_resize = rlqimg.resize((resize,resize),Image.LANCZOS)
+            img_resize.save(gen_path+"/testA/"+str(j).zfill(ldigit)+".jpg")
             # print("["+str(i)+"] testA saved")
 
         j += 1
@@ -135,10 +154,13 @@ for rlq in os.listdir(rlq_path):
             j = 1  # 초기화
             step += 1
             
-        if (i == (ltrainN+lvalN)):
+        elif (i == (ltrainN+lvalN)):
             print("===["+str(j-1)+" val set end]============================")
             j = 1
             step += 1
+        elif (i==(ltotal_dataset)):
+            step=4
+            break
         
 print("===["+str(j-1)+" test set end]============================")
 print("[low quality end]===============================================================================\n\n")
@@ -161,18 +183,22 @@ for rhq in os.listdir(rhq_path):
 
     #4. real hq image 저장하기 ------------------
         if step == 0:
-            rhqimg.save(gen_path+"/trainB/"+str(j).zfill(hdigit)+".jpg")
+            img_resize = rhqimg.resize((resize,resize),Image.LANCZOS)
+            img_resize.save(gen_path+"/trainB/"+str(j).zfill(hdigit)+".jpg")
             # print("["+str(i)+"] trainB saved")
         #val set
         if step == 1:
-            rhqimg.save(gen_path+"/valB/"+str(j).zfill(hdigit)+".jpg")
+            img_resize = rhqimg.resize((resize,resize),Image.LANCZOS)
+            img_resize.save(gen_path+"/valB/"+str(j).zfill(hdigit)+".jpg")
             # print("["+str(i)+"] valB saved")
         #test A set
         if step == 2:
-            rhqimg.save(gen_path+"/testA/h"+str(j).zfill(hdigit)+".jpg") # high quality image는 h붙여서 저장 A group test에서 
+            img_resize = rhqimg.resize((resize,resize),Image.LANCZOS)
+            img_resize.save(gen_path+"/testA/h"+str(j).zfill(hdigit)+".jpg") # high quality image는 h붙여서 저장 A group test에서 
             # print("["+str(i)+"] testB saved")
         #test B set
         if step == 3:
+            img_resize = rhqimg.resize((resize,resize),Image.LANCZOS)
             rhqimg.save(gen_path+"/testB/"+str(j).zfill(hdigit)+".jpg")
             # print("["+str(i)+"] testB saved")
 
@@ -182,16 +208,19 @@ for rhq in os.listdir(rhq_path):
             print("===["+str(j-1)+"train set end]============================")
             j = 1  # 초기화
             step += 1
-        if (i == (htrainN+hvalN)):
+        elif (i == (htrainN+hvalN)):
             print("===["+str(j-1)+"val set end]============================")
             j = 1
             step += 1
-        if (i == (htrainN+hvalN+htestaN)):
+        elif (i == (htrainN+hvalN+htestaN)):
             print("===["+str(j-1)+"testA set end]============================")
             j = 1
             step += 1
+        elif i ==htotal_dataset:
+            step=4
+            break
 
-print("===["+str(j)+"testB set end]============================")
+print("===["+str(j-1)+"testB set end]============================")
 print("[high quality end]===============================================================================\n\n")
 
 

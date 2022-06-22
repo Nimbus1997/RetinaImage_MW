@@ -10,8 +10,9 @@ from torch import ge
 
 # 0. augment 설정 ------------------
 ori_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_20220220"
-gen_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_20220221"
+gen_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_20220622_128" # change this
 i=0
+resize=128
 
 # 0-1. path없으면 path생성 ------------------
 if not os.path.isdir(gen_path):
@@ -26,6 +27,6 @@ for folder in os.listdir(ori_path): # 폴더안에 6개 폴더 있으니까 각�
 
     for file in os.listdir(ori_path+"/"+folder):
         img = Image.open(ori_path+"/"+folder+"/"+file)
-        img_resize= img.resize((512,512),Image.LANCZOS)
+        img_resize= img.resize((resize,resize),Image.LANCZOS)
         img_resize.save(gen_path+"/"+folder+"/"+file)
 
