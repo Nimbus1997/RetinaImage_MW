@@ -22,7 +22,7 @@ from PIL import Image
 # 0. augment 설정 ------------------
 rhq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/high_Q"
 rlq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/low_Q"  # 원본크기
-gen_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_202206022_256_n1000"
+gen_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_20220623_256_n1000"
 imageformat="png" #원본 이미지 포멧
 
 # total image개수 정하고 싶으면------------
@@ -45,6 +45,9 @@ print("rlq_path: ", rlq_path)
 print("rhq_path: ", rhq_path)
 print("gen_path: ", gen_path)
 print("원본 이미지 포멧: ", imageformat)
+print("total_img_sample: ", set_total,",", total_img_sample)
+print("resize: ", resize)
+
 print("-------------------------------")
 input("위의 값 확인후 enter 눌러서 진행 >>>") # 확인후 넘어가게 입력되면 넘어가게
 
@@ -199,7 +202,7 @@ for rhq in os.listdir(rhq_path):
         #test B set
         if step == 3:
             img_resize = rhqimg.resize((resize,resize),Image.LANCZOS)
-            rhqimg.save(gen_path+"/testB/"+str(j).zfill(hdigit)+".jpg")
+            img_resize.save(gen_path+"/testB/"+str(j).zfill(hdigit)+".jpg")
             # print("["+str(i)+"] testB saved")
 
         j += 1
