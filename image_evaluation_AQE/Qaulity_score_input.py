@@ -78,7 +78,7 @@ for folder in foldersA:
         img =cv.imread(path+folder+"/"+image,0)
         sharpnessi=sharpness(img,num)
         illuminationi=illumination(img,num)
-        quality_scorei=sharpnessi+illuminationi
+        quality_scorei=sharpnessi*illuminationi
         categoryi=category(quality_scorei)
 
         row =[folder,qualityi, image, sharpnessi, illuminationi, quality_scorei, categoryi]
@@ -92,7 +92,7 @@ for image in sorted(os.listdir(path+"testA")):
     qualityi='l'
     sharpnessi=sharpness(img,num)
     illuminationi=illumination(img,num)
-    quality_scorei=sharpnessi+illuminationi
+    quality_scorei=sharpnessi*illuminationi
     categoryi=category(quality_scorei)
     if "h" in image:
         qualityi='h'
@@ -109,7 +109,7 @@ for folder in foldersB:
         img =cv.imread(path+folder+"/"+image,0)
         sharpnessi=sharpness(img,num)
         illuminationi=illumination(img,num)
-        quality_scorei=sharpnessi+illuminationi
+        quality_scorei=sharpnessi*illuminationi
         categoryi=category(quality_scorei)
 
         row =[folder,qualityi, image, sharpnessi, illuminationi, quality_scorei, categoryi]

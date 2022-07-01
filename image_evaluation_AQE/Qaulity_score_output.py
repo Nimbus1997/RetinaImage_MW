@@ -1,6 +1,6 @@
 # ------------------------------------------------
 # read me
-# > for input data
+# > for output data
 # > shaprness.py와 illumination.py의 함수를 이용해서 최종 quality score를 구해서 excel에 작성
 # > excel의 column: [1] type: RHQ(real_B) or RLQ(real_A 중 not h) or GHQ(fake_B) ,fake_A, rec_A, rec_B 총 6개
 #                   [3] ImageName,
@@ -11,6 +11,7 @@
 # > excel name: AQE_data폴더이름_date
 # AQE: by H.Bartling ‘Automated Quality Evaluation of Digital Fundus Photography’ 2009 Acta Ophthalmologica (impact factor: 3.761, # cite: 68)
 # > 2022.06.27 jieunoh@postech.ac.kr
+# >     .06.30 Quality score = S * I 로 수정함. +로 오타 나있었음 
 # ------------------------------------------------
 from illumination import illumination
 from sharpness import sharpness
@@ -26,21 +27,20 @@ import seaborn as sns
 # 0. 돌릴때 마다 설정 ---------------------------
 image_size = 512
 patch_size = 64
-path = "/home/guest1/ellen_code/pytorch-CycleGAN-and-pix2pix/results/ellen_dwt_uresnet_2_1_0419/test_latest/images/"
-date = '0627'
-
+path = "/home/guest1/ellen_code/pytorch-CycleGAN-and-pix2pix/results/resnet512_0628/test_latest/images/"
+date = '0630'
 
 # 0. 설정 ---------------------------
 # no need to change this
 excel_path = "/home/guest1/ellen_code/RetinaImage_MW/image_evaluation_AQE/AQE_result/output/"
-excel_name = "AQE_"+path.split("/")[-3]+"_p" + str(patch_size)+"_"+date+".csv"
-plot_name = "AQE_"+path.split("/")[-3]+"_p" + str(patch_size)+"_"+date+".png"
+excel_name = "AQE_"+path.split("/")[-4]+"_p" + str(patch_size)+"_"+date+".csv"
+plot_name = "AQE_"+path.split("/")[-4]+"_p" + str(patch_size)+"_"+date+".png"
 
 num = image_size/patch_size
 print("-------------------------------")
 print("image size: ", image_size)
 print("patch_size: ", patch_size)
-print("orignal_data: ", path.split("/")[-3])
+print("orignal_data: ", path.split("/")[-4])
 
 print("input path:", path)
 print("excel_name: ", excel_name)
@@ -80,7 +80,7 @@ for typei in types:
             img = cv.imread(path+image, 0)
             sharpnessi = sharpness(img, num)
             illuminationi = illumination(img, num)
-            quality_scorei = sharpnessi+illuminationi
+            quality_scorei = sharpnessi*illuminationi
             categoryi = category(quality_scorei)
 
             row = [typei, image, sharpnessi,
@@ -99,22 +99,22 @@ rb_ss = str(round(df[df["type"] == 'real_Bh']["sharpness"].std(), roundd))
 fb_sm = str(round(df[df["type"] == 'fake_B']["sharpness"].mean(), roundd))
 fb_ss = str(round(df[df["type"] == 'fake_B']["sharpness"].std(), roundd))
 
-ra_im = str(round(df[df["type"] == 'real_A']["sharpness"].mean(), roundd))
-ra_is = str(round(df[df["type"] == 'real_A']["sharpness"].std(), roundd))
-rb_im = str(round(df[df["type"] == 'real_B']["sharpness"].mean(), roundd))
-rb_is = str(round(df[df["type"] == 'real_Bh']["sharpness"].std(), roundd))
-fb_im = str(round(df[df["type"] == 'fake_B']["sharpness"].mean(), roundd))
-fb_is = str(round(df[df["type"] == 'fake_B']["sharpness"].std(), roundd))
+ra_im = str(round(df[df["type"] == 'real_A']["illumination"].mean(), roundd))
+ra_is = str(round(df[df["type"] == 'real_A']["illumination"].std(), roundd))
+rb_im = str(round(df[df["type"] == 'real_B']["illumination"].mean(), roundd))
+rb_is = str(round(df[df["type"] == 'real_Bh']["illumination"].std(), roundd))
+fb_im = str(round(df[df["type"] == 'fake_B']["illumination"].mean(), roundd))
+fb_is = str(round(df[df["type"] == 'fake_B']["illumination"].std(), roundd))
 
-ra_qm = str(round(df[df["type"] == 'real_A']["sharpness"].mean(), roundd))
-ra_qs = str(round(df[df["type"] == 'real_A']["sharpness"].std(), roundd))
-rb_qm = str(round(df[df["type"] == 'real_B']["sharpness"].mean(), roundd))
-rb_qs = str(round(df[df["type"] == 'real_Bh']["sharpness"].std(), roundd))
-fb_qm = str(round(df[df["type"] == 'fake_B']["sharpness"].mean(), roundd))
-fb_qs = str(round(df[df["type"] == 'fake_B']["sharpness"].std(), roundd))
+ra_qm = str(round(df[df["type"] == 'real_A']["quality_score"].mean(), roundd))
+ra_qs = str(round(df[df["type"] == 'real_A']["quality_score"].std(), roundd))
+rb_qm = str(round(df[df["type"] == 'real_B']["quality_score"].mean(), roundd))
+rb_qs = str(round(df[df["type"] == 'real_Bh']["quality_score"].std(), roundd))
+fb_qm = str(round(df[df["type"] == 'fake_B']["quality_score"].mean(), roundd))
+fb_qs = str(round(df[df["type"] == 'fake_B']["quality_score"].std(), roundd))
 
 
-information = "realA-realB-fakeB: (mean,std): line1.s, line2.i ,line3.q \n \(" +\
+information = "realA-realB-fakeB: (mean,std): line1.s, line2.i ,line3.q \n (" +\
     ra_sm+", "+ra_ss+") ("+rb_sm+", "+rb_ss+")("+fb_sm+", "+fb_ss + ")\n ("\
     + ra_im+", "+ra_is+") ("+rb_im+", "+rb_is+")("+fb_im+", " + fb_is+")\n ("\
     + ra_qm+", "+ra_qs+") ("+rb_qm+", "+rb_qs+") ("+fb_qm+", "+fb_qs+")"
