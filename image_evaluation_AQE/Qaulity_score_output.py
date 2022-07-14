@@ -27,8 +27,8 @@ import seaborn as sns
 # 0. 돌릴때 마다 설정 ---------------------------
 image_size = 512
 patch_size = 64
-path = "/home/guest1/ellen_code/pytorch-CycleGAN-and-pix2pix/results/resnet512_0628/test_latest/images/"
-date = '0630'
+path = "/home/guest1/ellen_code/pytorch-CycleGAN-and-pix2pix/results/ellen_dwt_uresnet2_1_512n1000_0701/test_latest/images/"
+date = '0704'
 
 # 0. 설정 ---------------------------
 # no need to change this
