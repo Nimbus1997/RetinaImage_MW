@@ -3,19 +3,19 @@ import cv2 as cv
 import numpy as np
 from matplotlib import pyplot as plt
 from PIL import Image
+import tqdm
 
 #___________
 # READ ME-----------------------------------------------------
 # 1) train-A,B, test-A,B, val-A,B set으로 나누고
-# 2) 각각 file 명 1부터 시작하게
-#   !! 대신 001 이런식으로 하기 -> test할때 번호 순으로 들어가는 앞에 00으로 시작안하면 순서가 엉망..
-# 3) RLQ로 A SET만들고 B는 RHQ로 구성
+# >>>> 2) 파일명은 그대로 !!
+# >>>> 3) 파일 일단 crop 먼저하고, resize !! 
+# 4) RLQ로 A SET만들고 B는 RHQ로 구성
 #   !! 대신 TEST에서는 A에 low와 high둘다 넣기 -> train을 시킬 때는 low qualtiy만으로 하는 것이 좋았고, test할때는 high quality도 그대로 잘 나오는 지 확인 하는 것이 좋으니까.
 #   사실 rlq+rhq로 train시켰을때는 high quality의 비율이 너무 많아서 문제였던 것 같기도함. -> 다시 해보기
 #
 # 참고: https://copycoding.tistory.com/159
-# 0001이런식으로 저장하는 것: .zfill(숫자) https://deep-i.tistory.com/48
-# 2022.02.18 jieunoh@postech.ac.kr
+# 2022.08.30 jieunoh@postech.ac.kr
 # adjust 2022.06.22 -> total_image sample을 정할 수 있음 & size도 한번에 정하기
 # ----------------------------------------------------------------
 
@@ -51,6 +51,14 @@ print("resize: ", resize)
 print("-------------------------------")
 input("위의 값 확인후 enter 눌러서 진행 >>>") # 확인후 넘어가게 입력되면 넘어가게
 
+# 0-0. image crop 하는 함수 만들기
+def crop_center(img):
+    x, y = img.width, img.height
+    min_xy = min(x,y)
+    sx = x//2 - (min_xy//2)
+    sy = y//2 - (min_xy//2)
+    img = img.crop((sx,sy, sx+min_xy, sy+min_xy))
+    return img
 
 
 # 0-1. path없으면 path생성 ------------------
@@ -86,9 +94,6 @@ ltrainN = int(float(ltotal_dataset)/10.*float(trainlR))
 lvalN = int(float(ltotal_dataset)/10.*float(valhR))
 ltestN = ltotal_dataset - ltrainN-lvalN
 
-ldigit = len(str(ltotal_dataset)) # 자릿수
-print("\n-------------------------------")
-print("ldigit: ", ldigit)
 
 # high qualtiy -> B group & A group in test
 if set_total:
@@ -100,8 +105,7 @@ hvalN = int(float(htotal_dataset)/10.*float(valhR))
 htestaN = int(float(htotal_dataset)/10.*float(testhaR))
 htestbN = htotal_dataset - htrainN-hvalN-htestaN
 
-hdigit = len(str(htotal_dataset)) # 자릿수
-print("hdigit: ", hdigit)
+
 
 
 
@@ -133,21 +137,23 @@ for rlq in os.listdir(rlq_path):
             sw = w
         if sh > h:
             sh = h
+        
+        rlqimg = crop_center(rlqimg)
 
     #2. real lq image 저장하기 ------------------
         if step == 0:
             img_resize = rlqimg.resize((resize,resize),Image.LANCZOS)
-            img_resize.save(gen_path+"/trainA/"+str(j).zfill(ldigit)+".jpg")
+            img_resize.save(gen_path+"/trainA/"+rlq)
             # print("["+str(i)+"] trainA saved")
         #val set
         if step == 1:
             img_resize = rlqimg.resize((resize,resize),Image.LANCZOS)
-            img_resize.save(gen_path+"/valA/"+str(j).zfill(ldigit)+".jpg")
+            img_resize.save(gen_path+"/valA/"+rlq)
             # print("["+str(i)+"] valA saved")
         #test set
         if step == 2:
             img_resize = rlqimg.resize((resize,resize),Image.LANCZOS)
-            img_resize.save(gen_path+"/testA/"+str(j).zfill(ldigit)+".jpg")
+            img_resize.save(gen_path+"/testA/"+rlq)
             # print("["+str(i)+"] testA saved")
 
         j += 1
@@ -184,25 +190,27 @@ for rhq in os.listdir(rhq_path):
         if sh > h:
             sh = h
 
+        rhqimg = crop_center(rhqimg)
+
     #4. real hq image 저장하기 ------------------
         if step == 0:
             img_resize = rhqimg.resize((resize,resize),Image.LANCZOS)
-            img_resize.save(gen_path+"/trainB/"+str(j).zfill(hdigit)+".jpg")
+            img_resize.save(gen_path+"/trainB/"+rhq)
             # print("["+str(i)+"] trainB saved")
         #val set
         if step == 1:
             img_resize = rhqimg.resize((resize,resize),Image.LANCZOS)
-            img_resize.save(gen_path+"/valB/"+str(j).zfill(hdigit)+".jpg")
+            img_resize.save(gen_path+"/valB/"+rhq)
             # print("["+str(i)+"] valB saved")
         #test A set
         if step == 2:
             img_resize = rhqimg.resize((resize,resize),Image.LANCZOS)
-            img_resize.save(gen_path+"/testA/h"+str(j).zfill(hdigit)+".jpg") # high quality image는 h붙여서 저장 A group test에서 
+            img_resize.save(gen_path+"/testA/h"+rhq) # high quality image는 h붙여서 저장 A group test에서 
             # print("["+str(i)+"] testB saved")
         #test B set
         if step == 3:
             img_resize = rhqimg.resize((resize,resize),Image.LANCZOS)
-            img_resize.save(gen_path+"/testB/"+str(j).zfill(hdigit)+".jpg")
+            img_resize.save(gen_path+"/testB/"+rhq)
             # print("["+str(i)+"] testB saved")
 
         j += 1
