@@ -31,7 +31,8 @@ total_img_sample = 1000 #l, h each
 # ------------------------
 resize= 512
 
-
+# low quality: group A
+# high quality: group B
 trainlR, vallR, testlR = 6, 2, 2  # low quality data의 train : val: test 비율 쓰기
 trainhR, valhR, testhaR, testhbR = 6, 2, 1, 1 # high qualtiy data의 train : val: test 비율 쓰기
 biggerthanthis = 10000  # 10000보단 작을 것으로 예상
