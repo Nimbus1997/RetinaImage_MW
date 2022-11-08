@@ -51,7 +51,7 @@ input("위의 값 확인후 enter 눌러서 진행 >>>") # 확인후 넘어가�
 
 # 0-1. path없으면 path생성 ------------------
 folders =["train", "val", "test"]
-folders2 = ['crop_good', 'crop_usable','degrade_good','gt_croppgood_resize']
+folders2 = ['crop_good', 'crop_usable','degrade_good','gt_cropgood_resize']
 for f in folders:
     for ff in folders2:
         if not os.path.isdir(gen_path+"/"+f+"/"+ff):
