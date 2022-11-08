@@ -27,14 +27,14 @@ import seaborn as sns
 # 0. 돌릴때 마다 설정 ---------------------------
 image_size = 512
 patch_size = 64
-path = "/home/guest1/ellen_code/pytorch-CycleGAN-and-pix2pix/results/ellen_dwt_uresnet2_1_512n1000_0701/test_latest/images/"
-date = '0704'
+path = "/home/guest1/ellen_code/pytorch-CycleGAN-and-pix2pix_ellen/results/ellen_dwt_uresnet1_3_512n1000_0815_b4/test_latest/images/"
+# date = '0704'
 
 # 0. 설정 ---------------------------
 # no need to change this
 excel_path = "/home/guest1/ellen_code/RetinaImage_MW/image_evaluation_AQE/AQE_result/output/"
-excel_name = "AQE_"+path.split("/")[-4]+"_p" + str(patch_size)+"_"+date+".csv"
-plot_name = "AQE_"+path.split("/")[-4]+"_p" + str(patch_size)+"_"+date+".png"
+excel_name = "AQE_"+path.split("/")[-4]+"_p" + str(patch_size)+".csv"
+plot_name = "AQE_"+path.split("/")[-4]+"_p" + str(patch_size)+".png"
 
 num = image_size/patch_size
 print("-------------------------------")
