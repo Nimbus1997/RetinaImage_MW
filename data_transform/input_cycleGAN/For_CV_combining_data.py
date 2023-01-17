@@ -37,7 +37,10 @@ file_sy ="jpeg"
 
 l= 0
 h= 0 
+
 ldigit= 4 # 4자리수로 맞추기
+changename=False
+# changename=True
 
 
 print("original_path:", original_path)
@@ -55,25 +58,53 @@ if not os.path.isdir(hq_path):
 
 groupA = ["trainA","valA","testA"]  # low quality - testA에 hq도 있음
 groupB = ["trainB","valB","testB"]  # high quality 
-print("low (and high in test) quality images extracting - - -")
-for group in groupA:
-    for image in tqdm(sorted(os.listdir(original_path+"/"+group))):
-        if "h" in image:
+
+if changename:
+    print("low (and high in test) quality images extracting - - -")
+    for group in groupA:
+        for image in tqdm(sorted(os.listdir(original_path+"/"+group))):
+            if image[0] == 'h':
+                source_path=original_path+"/"+group+"/"+image
+                copy_path=hq_path+"/"+str(h).zfill(ldigit)+"."+file_sy
+                shutil.copy(source_path,copy_path)
+                h+=1
+            else:
+                source_path=original_path+"/"+group+"/"+image
+                copy_path=lq_path+"/"+str(l).zfill(ldigit)+"."+file_sy
+                shutil.copy(source_path,copy_path)
+                l=l+1
+    print("high quality images extracting - - -")
+    for group in groupB:
+        for image in tqdm(sorted(os.listdir(original_path+"/"+group))):
             source_path=original_path+"/"+group+"/"+image
             copy_path=hq_path+"/"+str(h).zfill(ldigit)+"."+file_sy
             shutil.copy(source_path,copy_path)
-            h+=1
-        else:
-            source_path=original_path+"/"+group+"/"+image
-            copy_path=lq_path+"/"+str(l).zfill(ldigit)+"."+file_sy
-            shutil.copy(source_path,copy_path)
-            l=l+1
-print("high quality images extracting - - -")
-for group in groupB:
-    for image in tqdm(sorted(os.listdir(original_path+"/"+group))):
-        source_path=original_path+"/"+group+"/"+image
-        copy_path=hq_path+"/"+str(h).zfill(ldigit)+"."+file_sy
-        shutil.copy(source_path,copy_path)
 
-        h=h+1   
+            h=h+1   
+
+else:
+    print("not changing the name")
+    print("low (and high in test) quality images extracting - - -")
+    for group in groupA:
+        for image in tqdm(sorted(os.listdir(original_path+"/"+group))):
+            if image[0] == 'h':
+                source_path=original_path+"/"+group+"/"+image
+                copy_path=hq_path+"/"+image
+                shutil.copy(source_path,copy_path)
+                h+=1
+            else:
+                source_path=original_path+"/"+group+"/"+image
+                copy_path=lq_path+"/"+image
+                shutil.copy(source_path,copy_path)
+                l=l+1
+    print("high quality images extracting - - -")
+    for group in groupB:
+        for image in tqdm(sorted(os.listdir(original_path+"/"+group))):
+            source_path=original_path+"/"+group+"/"+image
+            copy_path=hq_path+"/"+image
+            shutil.copy(source_path,copy_path)
+
+            h=h+1   
+
+
 

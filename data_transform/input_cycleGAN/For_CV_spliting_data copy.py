@@ -40,19 +40,19 @@ import shutil
 # MIV
 rhq_path = "/root/jieunoh/ellen_data/input_eyeq_total_spilt_new_hq"
 rlq_path = "/root/jieunoh/ellen_data/input_eyeq_total_spilt_new_lq" 
-new_path="input_eyeq_total_spilt_new"
+path2="input_20221211_2_512_n1000"
+path3="input_20221211_3_512_n1000"
+gen_path2 = "/home/guest1/ellen_data/UKB_quality_data2_combined/"+path2
+gen_path3 = "/home/guest1/ellen_data/UKB_quality_data2_combined/"+path3
 
-imageformat="jpeg" #원본 이미지 포멧
-num_how_much_more_dataset=4
+imageformat="jpg" #원본 이미지 포멧
 
-# 0. CV 개수에 따라서 다르게
-path_list = []
-for num in range(num_how_much_more_dataset):
-    numm=num+2
-    path_list.append(new_path+"_"+str(numm))
+
+
+
 
 # total image개수 정하고 싶으면------------
-set_total = False
+set_total = True
 total_img_sample = 1000 #l, h each 
 # ------------------------
 
@@ -69,9 +69,8 @@ sh = biggerthanthis  # smallest height 젤 작은 hieght 알아보기 위해서
 print("path check")
 print("rlq_path: ", rlq_path)
 print("rhq_path: ", rhq_path)
-print("num_how_much_more_dataset:", num_how_much_more_dataset)
-for path in path_list:
-    print("gen_path:", path)
+print("gen_path2: ", gen_path2)
+print("gen_path3: ", gen_path3)
 
 print("원본 이미지 포멧: ", imageformat)
 print("total_img_sample: ", set_total,",", total_img_sample)
@@ -82,7 +81,7 @@ input("위의 값 확인후 enter 눌러서 진행 >>>") # 확인후 넘어가�
 
 
 # 0-1. path없으면 path생성 ------------------------------------------------------------------------------------------
-for gen_path in path_list:
+for gen_path in [gen_path2, gen_path3]:
     print(gen_path)
     if not os.path.isdir(gen_path+"/trainA"):
         os.makedirs(gen_path+"/trainA")
@@ -111,7 +110,6 @@ if set_total:
     ltotal_dataset=total_img_sample
 else:
     ltotal_dataset = len(os.listdir(rlq_path))
-
 ltrainN = int(float(ltotal_dataset)/10.*float(trainlR))
 lvalN = int(float(ltotal_dataset)/10.*float(valhR))
 ltestN = ltotal_dataset - ltrainN-lvalN
@@ -150,7 +148,7 @@ input("위의 값 확인후 enter 눌러서 진행 >>>") # 확인후 넘어가�
 
 
 
-# LQ
+# [PATH2] ------------------------------------------------------------------------------------------------------------------------------
 # 1. real low quality image  불러오기 [A group] -------------------------------
 print("------------------------------------------------------")
 print("--[",path2,"]-----------------------------------------")
