@@ -5,13 +5,14 @@
  1. hq와 lq모우기-> *_hq , *_lq 폴더에 생성 0001부터 - 1000까지
 
  ---PART 1 [ V ]----------------------
-  2. 3 cross val 만들기 -> based "cycleGAN_rlqrhq_input_20220622.py"
-    (1) 원래처럼 train- val -test 순 [이미 완료]
-    (2) test-train-val 순
-    (3) val-test-train 순
+  2. 5 cross val 만들기 -> based "cycleGAN_rlqrhq_input_20220622.py"
+    (1) 원래처럼 train- val -test 순 [이미 완료] 6:2:2 / 6:2:2
+    (2) 4 세트 더 만들기
+    (3) low qulaity test set에 hq 넣는 것 빼고 6:2:1:1 --> 6:2:2
 ----------------------------------
  
  date: 2022.12.10
+ update: 2023.01.17
  made by: Ellen
  contact: jieunoh@postech.ac.kr
 
@@ -59,7 +60,7 @@ total_img_sample = 1000 #l, h each
 
 
 trainlR, vallR, testlR = 6, 2, 2  # low quality data의 train : val: test 비율 쓰기
-trainhR, valhR, testhaR, testhbR = 6, 2, 1, 1 # high qualtiy data의 train : val: test 비율 쓰기
+trainhR, valhR, testhaR, testhbR = 6, 2, 2 # high qualtiy data의 train : val: test 비율 쓰기
 biggerthanthis = 10000  # 10000보단 작을 것으로 예상
 sw = biggerthanthis  # smallst widht 젤작은 width 알아보기 위해서
 sh = biggerthanthis  # smallest height 젤 작은 hieght 알아보기 위해서
@@ -152,185 +153,85 @@ input("위의 값 확인후 enter 눌러서 진행 >>>") # 확인후 넘어가�
 
 # LQ
 # 1. real low quality image  불러오기 [A group] -------------------------------
+low_quality_block_size=ltotal_dataset/5
 print("------------------------------------------------------")
-print("--[",path2,"]-----------------------------------------")
-i = 0
-step = 0
-j = 1
-for rlq in tqdm(sorted(os.listdir(rlq_path))):
-    if imageformat in rlq:
-        i += 1
-        rlqimg = Image.open(rlq_path+"/"+rlq)
+for index, path in enumerate(path_list):
+    print("--[",path,"]-----------------------------------------")
+    test_start = low_quality_block_size*index
 
-    #2. real lq image 저장하기 ------------------
-        if step == 0:
-            rlqimg.save(gen_path2+"/testA/"+rlq)
-            j += 1
-        #val set
-        if step == 1:
-            rlqimg.save(gen_path2+"/trainA/"+rlq)
-            j += 1
-        #test set
-        if step == 2:
-            rlqimg.save(gen_path2+"/valA/"+rlq)
-            j += 1
+    if index==0:
+        val_start=low_quality_block_size*(4)
+    else:
+        val_start=low_quality_block_size*(index+1)
 
-        
+    i=0
+    test_count=0
+    val_count=0
+    train_count=0
 
-        if (i == ltestN):
-            print("===["+str(j-1)+" testA set end]============================")
-            j = 1  # 초기화
-            step += 1
-            
-        elif (i == (ltrainN+ltestN)):
-            print("===["+str(j-1)+" trainA set end]============================")
-            j = 1
-            step += 1
-        elif (i==(ltotal_dataset)):
-            step=4
-            break
-        
-print("===["+str(j-1)+" valA set end]============================")
+    for rlq in tqdm(sorted(os.listdir(rlq_path))):
+        if imageformat in rlq:
+            i += 1
+            source_path=rlq_path+'/'+rlq
+
+        #2. real lq image 저장하기 ------------------
+            # test
+            if (i>test_start) and (i<(test_start+low_quality_block_size)): 
+                copy_path=path+"/testA/"+rlq
+                shutil.copy(source_path,copy_path)
+                test_count+=1
+            # val
+            elif (i>val_start) and (i<(val_start+low_quality_block_size)):
+                copy_path = path+"/valA/"+rlq           
+                shutil.copy(source_path,copy_path)
+                val_count += 1
+            # train
+            else:
+                copy_path = path+"/trainA/"+rlq           
+                shutil.copy(source_path,copy_path)
+                train_count += 1
+    print("train/val/test: ", str(train_count),"/",str(val_count),"/",str(test_count))
 print("[low quality end]==================================\n\n")
 
 
 
-# 3. real hq import image [B group] ------------------
-i = 0
-step = 0
-j = 1
-for rhq in tqdm(sorted(os.listdir(rhq_path))):
-    if imageformat in rhq:
-        rhqimg = Image.open(rhq_path+"/"+rhq)
-        i += 1
+# 2. real hq import image [B group] ------------------------------------------------------
+high_quality_block_size=htotal_dataset/5
+print("------------------------------------------------------")
+for index, path in enumerate(path_list):
+    print("--[",path,"]-----------------------------------------")
+    test_start = high_quality_block_size*index
 
+    if index==0:
+        val_start=high_quality_block_size*(4)
+    else:
+        val_start=high_quality_block_size*(index+1)
 
-    #4. real hq image 저장하기 ------------------
-        if step == 0:
-            rhqimg.save(gen_path2+"/testA/h"+rhq)
-            j += 1
-        #val set
-        if step == 1:
-            rhqimg.save(gen_path2+"/testB/"+rhq)
-            j += 1
-        #test A set
-        if step == 2:
-            rhqimg.save(gen_path2+"/trainB/"+rhq) 
-            j += 1
-        #test B set
-        if step == 3:
-            rhqimg.save(gen_path2+"/valB/"+rhq)
-            j += 1
+    i=0
+    test_count=0
+    val_count=0
+    train_count=0
 
+    for rhq in tqdm(sorted(os.listdir(rhq_path))):
+        if imageformat in rhq:
+            i += 1
+            source_path=rhq_path+'/'+rhq
 
-        if (i == htestaN):
-            print("===["+str(j-1)+"testA set end]============================")
-            j = 1  # 초기화
-            step += 1
-        elif (i == (htestaN+htestbN)):
-            print("===["+str(j-1)+"testB set end]============================")
-            j = 1
-            step += 1
-        elif (i == (htrainN+htestaN+htestbN)):
-            print("===["+str(j-1)+"trainB set end]============================")
-            j = 1
-            step += 1
-        elif i ==htotal_dataset:
-            step=4
-            break
-
-print("===["+str(j-1)+"valB set end]============================")
-print("[high quality end]======================================\n\n")
-
-# # [PATH3] -val-test-train 순-----------------------------------------------------------------------------------------------------------------------------
-
-# print("------------------------------------------------------")
-# print("--[",path3,"]-----------------------------------------")
-# i = 0
-# step = 0
-# j = 1
-# for rlq in tqdm(sorted(os.listdir(rlq_path))):
-#     if imageformat in rlq:
-#         i += 1
-#         rlqimg = Image.open(rlq_path+"/"+rlq)
-
-#     #2. real lq image 저장하기 ------------------
-#         if step == 0:
-#             rlqimg.save(gen_path3+"/valA/"+rlq)
-#             j += 1
-#         #val set
-#         if step == 1:
-#             rlqimg.save(gen_path3+"/testA/"+rlq)
-#             j += 1
-#         #test set
-#         if step == 2:
-#             rlqimg.save(gen_path3+"/trainA/"+rlq)
-#             j += 1
-
-#         if (i == lvalN):
-#             print("===["+str(j-1)+" valA set end]============================")
-#             j = 1  # 초기화
-#             step += 1
-            
-#         elif (i == (lvalN+ltestN)):
-#             print("===["+str(j-1)+" testA set end]============================")
-#             j = 1
-#             step += 1
-#         elif (i==(ltotal_dataset)):
-#             step=4
-#             break
-        
-# print("===["+str(j-1)+" trainA set end]============================")
-# print("[low quality end]==================================\n\n")
-
-
-
-
-
-# # 3. real hq import image [B group] ------------------
-# i = 0
-# step = 0
-# j = 1
-# for rhq in tqdm(sorted(os.listdir(rhq_path))):
-#     if imageformat in rhq:
-#         rhqimg = Image.open(rhq_path+"/"+rhq)
-#         i += 1
-
-
-#     #4. real hq image 저장하기 ------------------
-#         if step == 0:
-#             rhqimg.save(gen_path3+"/valB/"+rhq)
-#             j += 1
-#         #val set
-#         if step == 1:
-#             rhqimg.save(gen_path3+"/testA/h"+rhq)
-#             j += 1
-#         #test A set
-#         if step == 2:
-#             rhqimg.save(gen_path3+"/testB/"+rhq) 
-#             j += 1
-#         #test B set
-#         if step == 3:
-#             rhqimg.save(gen_path3+"/trainB/"+rhq)
-#             j += 1
-
-        
-
-#         if (i == hvalN):
-#             print("===["+str(j-1)+"valB set end]============================")
-#             j = 1  # 초기화
-#             step += 1
-#         elif (i == (htestaN+hvalN)):
-#             print("===["+str(j-1)+"testA set end]============================")
-#             j = 1
-#             step += 1
-#         elif (i == (hvalN+htestaN+htestbN)):
-#             print("===["+str(j-1)+"testB set end]============================")
-#             j = 1
-#             step += 1
-#         elif i ==htotal_dataset:
-#             step=4
-#             break
-
-# print("===["+str(j-1)+"trainB set end]============================")
-# print("[high quality end]======================================\n\n")
+        #2. real lq image 저장하기 ------------------
+            # test
+            if (i>test_start) and (i<(test_start+high_quality_block_size)): 
+                copy_path=path+"/testA/"+rhq
+                shutil.copy(source_path,copy_path)
+                test_count+=1
+            # val
+            elif (i>val_start) and (i<(val_start+high_quality_block_size)):
+                copy_path = path+"/valA/"+rhq           
+                shutil.copy(source_path,copy_path)
+                val_count += 1
+            # train
+            else:
+                copy_path = path+"/trainA/"+rhq           
+                shutil.copy(source_path,copy_path)
+                train_count += 1
+    print("train/val/test: ", str(train_count),"/",str(val_count),"/",str(test_count))
+print("[high quality end]==================================\n\n")
