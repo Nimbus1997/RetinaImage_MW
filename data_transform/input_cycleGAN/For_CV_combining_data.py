@@ -22,17 +22,23 @@ from tqdm import tqdm
 import shutil
 import pdb
 
-# Mediwhale
-original_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_20220623_512_n1000"
-lq_path = "/".join(original_path.split("/")[:-1]+[(original_path.split("/")[-1]+"_lq")])
-hq_path = "/".join(original_path.split("/")[:-1]+[(original_path.split("/")[-1]+"_hq")])
+# # Mediwhale
+# original_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_20220623_512_n1000"
+# lq_path = "/".join(original_path.split("/")[:-1]+[(original_path.split("/")[-1]+"_lq")])
+# hq_path = "/".join(original_path.split("/")[:-1]+[(original_path.split("/")[-1]+"_hq")])
+# file_sy ="jpg"
 
 # MIV
+original_path="/root/jieunoh/ellen_data/input_eyeq_total_spilt_new"
+lq_path = "/".join(original_path.split("/")[:-1]+[(original_path.split("/")[-1]+"_lq")])
+hq_path = "/".join(original_path.split("/")[:-1]+[(original_path.split("/")[-1]+"_hq")])
+file_sy ="jpeg"
+
 
 l= 0
 h= 0 
 ldigit= 4 # 4자리수로 맞추기
-file_sy ="jpg"
+
 
 print("original_path:", original_path)
 print("lq_path:", lq_path)
