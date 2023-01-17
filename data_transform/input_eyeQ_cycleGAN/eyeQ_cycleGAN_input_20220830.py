@@ -3,7 +3,7 @@ import cv2 as cv
 import numpy as np
 from matplotlib import pyplot as plt
 from PIL import Image
-import tqdm
+from tqdm import tqdm
 
 #___________
 # READ ME-----------------------------------------------------
@@ -16,20 +16,24 @@ import tqdm
 #
 # 참고: https://copycoding.tistory.com/159
 # 2022.08.30 jieunoh@postech.ac.kr
-# adjust 2022.06.22 -> total_image sample을 정할 수 있음 & size도 한번에 정하기
+# adjust from 2022.06.22 -> total_image sample을 정할 수 있음 & size도 한번에 정하기
+# edit 2022.11.30 -> using crop image (cropped by eyeQ_ellen/EyeQ_preprocess)
+# edit 2022.12.02 -> to make same 이미지 구성 -> crop을 한것 과 안한 것
+#                   sorted 추가
 # ----------------------------------------------------------------
 
 # 0. augment 설정 ------------------
-rhq_path = "/home/ellen/data/EyeQ/all_hq"
-rlq_path = "/home/ellen/data/EyeQ/all_lq"  # 원본크기
-gen_path = "/home/ellen/data/input_eyeq_20220830_512_n1000"
-imageformat="jpeg" #원본 이미지 포멧
+rhq_path = "/root/jieunoh/ellen_data/EyeQ/all_hq_crop"
+rlq_path = "/root/jieunoh/ellen_data/EyeQ/all_lq_crop"  # 원본크기
+gen_path = "/root/jieunoh/ellen_data/input_eyeq_256_n1000_EyeQcrop"
+imageformat="png" #원본 이미지 포멧
+pre_crop = True
 
 # total image개수 정하고 싶으면------------
 set_total = True
 total_img_sample = 1000 #l, h each 
 # ------------------------
-resize= 512
+resize= 256
 
 # low quality: group A
 # high quality: group B
@@ -45,6 +49,7 @@ print("path check")
 print("rlq_path: ", rlq_path)
 print("rhq_path: ", rhq_path)
 print("gen_path: ", gen_path)
+print("pre_crop여부: ",pre_crop )
 print("원본 이미지 포멧: ", imageformat)
 print("total_img_sample: ", set_total,",", total_img_sample)
 print("resize: ", resize)
@@ -129,7 +134,7 @@ step = 0
 j = 1
 
 # 1. real low quality image  불러오기 [A group] ------------------
-for rlq in os.listdir(rlq_path):
+for rlq in tqdm(sorted(os.listdir(rlq_path))):
     if imageformat in rlq:
         rlqimg = Image.open(rlq_path+"/"+rlq)
         i += 1
@@ -139,7 +144,8 @@ for rlq in os.listdir(rlq_path):
         if sh > h:
             sh = h
         
-        rlqimg = crop_center(rlqimg)
+        if not pre_crop: 
+            rlqimg = crop_center(rlqimg)
 
     #2. real lq image 저장하기 ------------------
         if step == 0:
@@ -182,7 +188,7 @@ print("[low quality end]========================================================
 i = 0
 step = 0
 j = 1
-for rhq in os.listdir(rhq_path):
+for rhq in tqdm(sorted(os.listdir(rhq_path))):
     if imageformat in rhq:
         rhqimg = Image.open(rhq_path+"/"+rhq)
         i += 1
@@ -191,7 +197,8 @@ for rhq in os.listdir(rhq_path):
         if sh > h:
             sh = h
 
-        rhqimg = crop_center(rhqimg)
+        if not pre_crop:
+            rhqimg = crop_center(rhqimg)
 
     #4. real hq image 저장하기 ------------------
         if step == 0:
