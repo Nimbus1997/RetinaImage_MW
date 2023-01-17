@@ -22,9 +22,12 @@ from tqdm import tqdm
 import shutil
 import pdb
 
+# Mediwhale
 original_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_20220623_512_n1000"
 lq_path = "/".join(original_path.split("/")[:-1]+[(original_path.split("/")[-1]+"_lq")])
 hq_path = "/".join(original_path.split("/")[:-1]+[(original_path.split("/")[-1]+"_hq")])
+
+# MIV
 
 l= 0
 h= 0 
