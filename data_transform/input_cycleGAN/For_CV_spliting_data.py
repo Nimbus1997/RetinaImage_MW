@@ -39,9 +39,9 @@ import shutil
 # imageformat="jpg" #원본 이미지 포멧
 
 # MIV
-rhq_path = "/root/jieunoh/ellen_data/input_eyeq_total_spilt_new_hq"
-rlq_path = "/root/jieunoh/ellen_data/input_eyeq_total_spilt_new_lq" 
-new_path="input_eyeq_total_spilt_new"
+rhq_path = "/root/jieunoh/ellen_data/isecret_input_eyeq_total_hq"
+rlq_path = "/root/jieunoh/ellen_data/isecret_input_eyeq_total_lq" 
+new_path="/root/jieunoh/ellen_data/input_eyeq_total_spilt_new"
 
 imageformat="jpeg" #원본 이미지 포멧
 num_how_much_more_dataset=4
@@ -60,7 +60,7 @@ total_img_sample = 1000 #l, h each
 
 
 trainlR, vallR, testlR = 6, 2, 2  # low quality data의 train : val: test 비율 쓰기
-trainhR, valhR, testhaR, testhbR = 6, 2, 2 # high qualtiy data의 train : val: test 비율 쓰기
+trainhR, valhR, testhR  = 6, 2, 2 # high qualtiy data의 train : val: test 비율 쓰기
 biggerthanthis = 10000  # 10000보단 작을 것으로 예상
 sw = biggerthanthis  # smallst widht 젤작은 width 알아보기 위해서
 sh = biggerthanthis  # smallest height 젤 작은 hieght 알아보기 위해서
@@ -128,8 +128,7 @@ else:
     htotal_dataset = len(os.listdir(rhq_path))
 htrainN = int(float(htotal_dataset)/10.*float(trainhR))
 hvalN = int(float(htotal_dataset)/10.*float(valhR))
-htestaN = int(float(htotal_dataset)/10.*float(testhaR)) #Agroup
-htestbN = htotal_dataset - htrainN-hvalN-htestaN
+htestN = htotal_dataset - htrainN-hvalN
 
 hdigit = len(str(htotal_dataset)) # 자릿수
 print("hdigit: ", hdigit)
@@ -142,10 +141,10 @@ print("Low qualtiy # of dataset in (train : val : test) : (",
       ltrainN, ", ", lvalN, ", ", ltestN, ")")
 
 
-print("\n[B group] ratio of high quality dataset (train : val : test-A: test-B) : (",
-      trainhR, ": ", valhR, ": ", testhaR, ": ", testhbR, ")")
-print("High qualtiy # of dataset in (train : val : test-A: test-B) : (",
-      htrainN, ", ", hvalN, ", ", htestaN, ", ", htestbN, ")")
+print("\n[B group] ratio of high quality dataset (train : val :test) : (",
+      trainhR, ": ", valhR, ": ", testhR, ")")
+print("High qualtiy # of dataset in (train : val : test) : (",
+      htrainN, ", ", hvalN, ", ", htestN, ")")
 print("-------------------------------")
 input("위의 값 확인후 enter 눌러서 진행 >>>") # 확인후 넘어가게 입력되면 넘어가게
 
