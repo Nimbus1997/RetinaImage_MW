@@ -219,17 +219,17 @@ for index, path in enumerate(path_list):
         #2. real lq image 저장하기 ------------------
             # test
             if (i>test_start) and (i<(test_start+high_quality_block_size)): 
-                copy_path=path+"/testA/"+rhq
+                copy_path=path+"/testB/"+rhq
                 shutil.copy(source_path,copy_path)
                 test_count+=1
             # val
             elif (i>val_start) and (i<(val_start+high_quality_block_size)):
-                copy_path = path+"/valA/"+rhq           
+                copy_path = path+"/valB/"+rhq           
                 shutil.copy(source_path,copy_path)
                 val_count += 1
             # train
             else:
-                copy_path = path+"/trainA/"+rhq           
+                copy_path = path+"/trainB/"+rhq           
                 shutil.copy(source_path,copy_path)
                 train_count += 1
     print("train/val/test: ", str(train_count),"/",str(val_count),"/",str(test_count))

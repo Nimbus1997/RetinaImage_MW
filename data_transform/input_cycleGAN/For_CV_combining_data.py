@@ -108,3 +108,4 @@ else:
 
 
 
+print("# of hq: ", h,", # of lq: ", l)
