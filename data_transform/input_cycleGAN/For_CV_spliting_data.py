@@ -29,21 +29,18 @@ import shutil
 
 # 0. augment 설정 ------------------
 # Mediwhale
-# rhq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_20220623_512_n1000_hq"
-# rlq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_20220623_512_n1000_lq" 
-# path2="input_20221211_2_512_n1000"
-# path3="input_20221211_3_512_n1000"
-# gen_path2 = "/home/guest1/ellen_data/UKB_quality_data2_combined/"+path2
-# gen_path3 = "/home/guest1/ellen_data/UKB_quality_data2_combined/"+path3
+rhq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_20220623_512_n1000_hq"
+rlq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_20220623_512_n1000_lq" 
+new_path="/home/guest1/ellen_data/UKB_quality_data2_combined/inpt_20230118_512"
+imageformat="jpg" #원본 이미지 포멧
 
-# imageformat="jpg" #원본 이미지 포멧
+# # MIV
+# rhq_path = "/root/jieunoh/ellen_data/isecret_input_eyeq_total_hq"
+# rlq_path = "/root/jieunoh/ellen_data/isecret_input_eyeq_total_lq" 
+# new_path="/root/jieunoh/ellen_data/input_eyeq_total_spilt_new"
+# imageformat="jpeg" #원본 이미지 포멧
 
-# MIV
-rhq_path = "/root/jieunoh/ellen_data/isecret_input_eyeq_total_hq"
-rlq_path = "/root/jieunoh/ellen_data/isecret_input_eyeq_total_lq" 
-new_path="/root/jieunoh/ellen_data/input_eyeq_total_spilt_new"
 
-imageformat="jpeg" #원본 이미지 포멧
 num_how_much_more_dataset=4
 
 # 0. CV 개수에 따라서 다르게
@@ -175,12 +172,12 @@ for index, path in enumerate(path_list):
 
         #2. real lq image 저장하기 ------------------
             # test
-            if (i>test_start) and (i<(test_start+low_quality_block_size)): 
+            if (i>=test_start) and (i<(test_start+low_quality_block_size)): 
                 copy_path=path+"/testA/"+rlq
                 shutil.copy(source_path,copy_path)
                 test_count+=1
             # val
-            elif (i>val_start) and (i<(val_start+low_quality_block_size)):
+            elif (i>=val_start) and (i<(val_start+low_quality_block_size)):
                 copy_path = path+"/valA/"+rlq           
                 shutil.copy(source_path,copy_path)
                 val_count += 1
@@ -218,12 +215,12 @@ for index, path in enumerate(path_list):
 
         #2. real lq image 저장하기 ------------------
             # test
-            if (i>test_start) and (i<(test_start+high_quality_block_size)): 
+            if (i>=test_start) and (i<(test_start+high_quality_block_size)): 
                 copy_path=path+"/testB/"+rhq
                 shutil.copy(source_path,copy_path)
                 test_count+=1
             # val
-            elif (i>val_start) and (i<(val_start+high_quality_block_size)):
+            elif (i>=val_start) and (i<(val_start+high_quality_block_size)):
                 copy_path = path+"/valB/"+rhq           
                 shutil.copy(source_path,copy_path)
                 val_count += 1
