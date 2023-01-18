@@ -31,7 +31,7 @@ import shutil
 # Mediwhale
 rhq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_20220623_512_n1000_hq"
 rlq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_20220623_512_n1000_lq" 
-new_path="/home/guest1/ellen_data/UKB_quality_data2_combined/inpt_20230118_512"
+new_path="/home/guest1/ellen_data/UKB_quality_data2_combined/input_20230118_512"
 imageformat="jpg" #원본 이미지 포멧
 
 # # MIV
@@ -158,7 +158,7 @@ for index, path in enumerate(path_list):
     if index==0:
         val_start=low_quality_block_size*(4)
     else:
-        val_start=low_quality_block_size*(index+1)
+        val_start=low_quality_block_size*(index-1)
 
     i=0
     test_count=0
@@ -167,7 +167,6 @@ for index, path in enumerate(path_list):
 
     for rlq in tqdm(sorted(os.listdir(rlq_path))):
         if imageformat in rlq:
-            i += 1
             source_path=rlq_path+'/'+rlq
 
         #2. real lq image 저장하기 ------------------
@@ -186,6 +185,7 @@ for index, path in enumerate(path_list):
                 copy_path = path+"/trainA/"+rlq           
                 shutil.copy(source_path,copy_path)
                 train_count += 1
+            i += 1
     print("train/val/test: ", str(train_count),"/",str(val_count),"/",str(test_count))
 print("[low quality end]==================================\n\n")
 
@@ -201,7 +201,7 @@ for index, path in enumerate(path_list):
     if index==0:
         val_start=high_quality_block_size*(4)
     else:
-        val_start=high_quality_block_size*(index+1)
+        val_start=high_quality_block_size*(index-1)
 
     i=0
     test_count=0
@@ -210,7 +210,6 @@ for index, path in enumerate(path_list):
 
     for rhq in tqdm(sorted(os.listdir(rhq_path))):
         if imageformat in rhq:
-            i += 1
             source_path=rhq_path+'/'+rhq
 
         #2. real lq image 저장하기 ------------------
@@ -229,5 +228,6 @@ for index, path in enumerate(path_list):
                 copy_path = path+"/trainB/"+rhq           
                 shutil.copy(source_path,copy_path)
                 train_count += 1
+            i += 1
     print("train/val/test: ", str(train_count),"/",str(val_count),"/",str(test_count))
 print("[high quality end]==================================\n\n")
