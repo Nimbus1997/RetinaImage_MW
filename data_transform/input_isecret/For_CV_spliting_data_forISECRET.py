@@ -6,6 +6,9 @@
  2. 5 cross val 만들기 
     (1) RetinaImage_MW/data_transform/input_cycleGAN/For_CV_spliting_data.py based
     (2) 4개 더 만들기
+    (3) 각 새로운 4개의 dataset 폴더에 
+        (i) low quality set먼저 crop_usable에 
+        (ii) high quality set에서 high quality와 그것의 짝이되는 degraded set도
  
  date: 2023.01.18
  made by: Ellen
@@ -34,10 +37,10 @@ import shutil
 # imageformat="jpg" #원본 이미지 포멧
 
 # MIV
-rhq_path = "/root/jieunoh/ellen_data/isecret_input_eyeq_total_hq"
-rlq_path = "/root/jieunoh/ellen_data/isecret_input_eyeq_total_lq" 
-degrade_path= ''
-new_path="/root/jieunoh/ellen_data/isecret_input_eyeq_total_new"
+rhq_path = "/root/jieunoh/ellen_data/isecret_eyeq_total_hq"
+rlq_path = "/root/jieunoh/ellen_data/isecret_eyeq_total_lq" 
+degrade_path= '/root/jieunoh/ellen_data/isecret_eyeq_total_degraded'
+new_path="/root/jieunoh/ellen_data/input_eyeq_isecret_total"
 
 imageformat="jpeg" #원본 이미지 포멧
 num_how_much_more_dataset=4
@@ -59,6 +62,8 @@ biggerthanthis = 10000  # 10000보단 작을 것으로 예상
 print("path check")
 print("rlq_path: ", rlq_path)
 print("rhq_path: ", rhq_path)
+print("degrade_path: ", degrade_path)
+
 print("num_how_much_more_dataset:", num_how_much_more_dataset)
 for path in path_list:
     print("gen_path:", path)
@@ -69,7 +74,7 @@ print("-------------------------------")
 input("위의 값 확인후 enter 눌러서 진행 >>>") # 확인후 넘어가게 입력되면 넘어가게
 
 group1 = ["train","val","test"]  # outer directory
-group2 = ["crop_good","crop_usable"]  # inner directories 
+group2 = ["crop_good","crop_usable","degrade_good"]  # inner directories 
 
 # 0-1. path없으면 path생성 ------------------------------------------------------------------------------------------
 for gen_path in path_list:
@@ -123,7 +128,7 @@ input("위의 값 확인후 enter 눌러서 진행 >>>") # 확인후 넘어가�
 # LQ
 # 1. real low quality image  불러오기 [crop_usable -group2[1]] -------------------------------
 low_quality_block_size=ltotal_dataset/5
-print("------------------------------------------------------")
+print("LQ------------------------------------------------------")
 for index, path in enumerate(path_list):
     print("--[",path,"]-----------------------------------------")
     test_start = low_quality_block_size*index
@@ -166,9 +171,11 @@ print("[low quality end]==================================\n\n")
 
 
 
-# 2. real hq import image [crop_good group2[0]] ------------------------------------------------------
+# 2. real hq import image [crop_good group2[0]] & degraded image ------------------------------------------------------
+degraded_set=['001', '100', '010', '110', '101', '011', '111']
+
 high_quality_block_size=htotal_dataset/5
-print("------------------------------------------------------")
+print("HQ, degrade------------------------------------------------------")
 for index, path in enumerate(path_list):
     print("--[",path,"]-----------------------------------------")
     test_start = high_quality_block_size*index
@@ -188,22 +195,35 @@ for index, path in enumerate(path_list):
     for rhq in tqdm(sorted(os.listdir(rhq_path))):
         if imageformat in rhq:
             source_path=rhq_path+'/'+rhq
+            name=rhq.split(".")[0]
 
         #2. real lq image 저장하기 ------------------
             # test
             if (i>=test_start) and (i<(test_start+high_quality_block_size)): 
                 copy_path=path+"/eyeq/test/"+group2[0]
                 shutil.copy(source_path,copy_path)
+                for degrade in degraded_set:
+                    source_degrade_path = degrade_path+'/'+name+'_'+degrade+".jpeg"
+                    copy_degrade_path = path+"/eyeq/test/"+group2[2]
+                    shutil.copy(source_degrade_path,copy_degrade_path)
                 test_count+=1
             # val
             elif (i>=val_start) and (i<(val_start+high_quality_block_size)):
                 copy_path = path+"/eyeq/val/"+group2[0]  
                 shutil.copy(source_path,copy_path)
+                for degrade in degraded_set:
+                    source_degrade_path = degrade_path+'/'+name+'_'+degrade+".jpeg"
+                    copy_degrade_path = path+"/eyeq/val/"+group2[2]
+                    shutil.copy(source_degrade_path,copy_degrade_path)
                 val_count += 1
             # train
             else:
                 copy_path = path+"/eyeq/train/"+group2[0]
                 shutil.copy(source_path,copy_path)
+                for degrade in degraded_set:
+                    source_degrade_path = degrade_path+'/'+name+'_'+degrade+".jpeg"
+                    copy_degrade_path = path+"/eyeq/train/"+group2[2]
+                    shutil.copy(source_degrade_path,copy_degrade_path)
                 train_count += 1
             
             i += 1
