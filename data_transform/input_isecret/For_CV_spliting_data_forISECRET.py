@@ -36,6 +36,7 @@ import shutil
 # MIV
 rhq_path = "/root/jieunoh/ellen_data/isecret_input_eyeq_total_hq"
 rlq_path = "/root/jieunoh/ellen_data/isecret_input_eyeq_total_lq" 
+degrade_path= ''
 new_path="/root/jieunoh/ellen_data/isecret_input_eyeq_total_new"
 
 imageformat="jpeg" #원본 이미지 포멧
