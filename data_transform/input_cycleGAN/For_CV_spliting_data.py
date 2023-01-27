@@ -29,15 +29,15 @@ import shutil
 
 # 0. augment 설정 ------------------
 # Mediwhale
-rhq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_20220623_512_n1000_hq"
-rlq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_20220623_512_n1000_lq" 
-new_path="/home/guest1/ellen_data/UKB_quality_data2_combined/input_20230118_512"
+# rhq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_20220623_512_n1000_hq"
+# rlq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_20220623_512_n1000_lq" 
+# new_path="/home/guest1/ellen_data/UKB_quality_data2_combined/input_20230118_512"
 imageformat="jpg" #원본 이미지 포멧
 
 # # MIV
-# rhq_path = "/root/jieunoh/ellen_data/isecret_input_eyeq_total_hq"
-# rlq_path = "/root/jieunoh/ellen_data/isecret_input_eyeq_total_lq" 
-# new_path="/root/jieunoh/ellen_data/input_eyeq_total_spilt_new"
+rhq_path = "/root/jieunoh/ellen_data/isecret_input_eyeq_total_hq_512"
+rlq_path = "/root/jieunoh/ellen_data/isecret_input_eyeq_total_lq_512" 
+new_path="/root/jieunoh/ellen_data/0_cyclegan_input/eyeq_total"
 # imageformat="jpeg" #원본 이미지 포멧
 
 
