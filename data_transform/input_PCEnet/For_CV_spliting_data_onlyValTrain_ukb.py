@@ -112,6 +112,10 @@ for gen_path in path_list:
     if not os.path.isdir(gen_path+"/target_mask"):
         os.makedirs(gen_path+"/target_mask")
         print("target_mask(lq) path generated!")
+    if not os.path.isdir(gen_path+"/target_gt_mask"):
+        os.makedirs(gen_path+"/target_gt_mask")
+        print("target_gt_mask(hq) path generated!")
+        
 
 # 0-2. dataset 나누기 -train val test 개수------------------------------------------------------------------------------------------------------------
 
@@ -198,8 +202,11 @@ for index, path in enumerate(path_list):
         #2. real lq image 저장하기 ------------------
             # val = test (target_gt -> 안쓸예정)
             if (i>=test_start) and (i<(test_start+high_quality_block_size)): 
-                copy_path_val=path+"/target_gt/"+rhq
-                shutil.copy(source_path_img,copy_path_val)
+                copy_path_val_image=path+"/target_gt/"+rhq
+                copy_path_val_mask=path+"/target_gt_mask/"+rhq
+                shutil.copy(source_path_img,copy_path_val_image)
+                shutil.copy(source_path_mask,copy_path_val_mask)
+
                 val_count+=1
             
             # train (source)
