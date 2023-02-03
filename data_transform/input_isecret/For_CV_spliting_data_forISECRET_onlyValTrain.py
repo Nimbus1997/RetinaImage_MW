@@ -28,12 +28,12 @@ import shutil
 
 # 0. augment 설정 ------------------
 # Mediwhale
-rhq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_20220623_512_n1000_hq"
-rlq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_20220623_512_n1000_lq" 
-degrade_path= '/root/jieunoh/ellen_data/isecret_eyeq_total_degraded'
-new_path="/root/jieunoh/ellen_data/0_isceret_input/isinput_eyeq_total"
+rhq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/hq_isecret_256_n1000"
+rlq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/lq_isecret_256_n1000" 
+degrade_path= '/home/guest1/ellen_data/UKB_quality_data2_combined/degrad_isecret_256_n1000'
+new_path="/home/guest1/ellen_data/UKB_quality_data2_combined/input_isecret/ukb_256"
+imageformat="jpeg" #원본 이미지 포멧
 
-imageformat="jpg" #원본 이미지 포멧
 
 # MIV
 # rhq_path = "/root/jieunoh/ellen_data/isecret_eyeq_total_hq"
