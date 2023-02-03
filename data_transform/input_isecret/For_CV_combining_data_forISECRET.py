@@ -23,18 +23,25 @@ import shutil
 import pdb
 
 
-# MIV
-original_path="/root/jieunoh/ellen_data/input_eyeq_isecret_total_spilt_new/eyeq"
+
+# mediwhale
+original_path="/home/guest1/ellen_data/UKB_quality_data2_combined/input_old_datasets/isecret_input_1_256/eyeq"
 gen_path ="isecret_input_eyeq_total"
 lq_path = "/".join(original_path.split("/")[:-2]+[gen_path+"_lq"])
 hq_path = "/".join(original_path.split("/")[:-2]+[gen_path+"_hq"])
 degraded_path ="/".join(original_path.split("/")[:-2]+[gen_path+"_degraded"])
-file_sy ="jpeg"
+file_sy ="jpg"
+changename=True # medi whale -> 이름이 겹쳐서 해야함 
+ldigit= 4 # 4자리수로 맞추기
 
-
-l= 0
-h= 0 
-
+# # MIV
+# original_path="/root/jieunoh/ellen_data/input_eyeq_isecret_total_spilt_new/eyeq"
+# gen_path ="isecret_input_eyeq_total"
+# lq_path = "/".join(original_path.split("/")[:-2]+[gen_path+"_lq"])
+# hq_path = "/".join(original_path.split("/")[:-2]+[gen_path+"_hq"])
+# degraded_path ="/".join(original_path.split("/")[:-2]+[gen_path+"_degraded"])
+# file_sy ="jpeg"
+# changename=False
 
 
 print("original_path:", original_path)
@@ -42,7 +49,8 @@ print("lq_path:", lq_path)
 print("hq_path:", hq_path)
 print("degraded_path:", degraded_path)
 print("file 확장자: ",file_sy)
-input("위의 값 확인후 enter 눌러서 진행 >>>")
+print("이름 바꾸는 지: ",changename)
+input("[LAST CHANCE]위의 값 확인후 enter 눌러서 진행 >>>")
 
 if not os.path.isdir(lq_path):
     os.makedirs(lq_path)
@@ -59,47 +67,91 @@ group2 = ["crop_good","crop_usable","degrade_good"]  # inner directories
 
 print("not changing the name")
 print("low (and high in test) quality images extracting - - -")
+
+
 total_high_count=0
 total_low_count=0
 total_degrade_count=0
 
-for group11 in group1:
-    for i, group22 in enumerate(group2):
-        count =0
-        if i==0:
-            # crop_good
-            print("high quality images extracting - - -")
-            for image in tqdm(sorted(os.listdir(original_path+"/"+group11+"/"+group22))):
-                source_path=original_path+"/"+group11+"/"+group22+"/"+image
-                copy_path=hq_path+"/"+image
-                shutil.copy(source_path,copy_path)
-                count+=1
-            total_high_count+=count
-            print("# of hq data:", count)
+if changename:
 
-        elif i==1:
-            # crop_usable
-            print("low quality images extracting - - -")
-            for image in tqdm(sorted(os.listdir(original_path+"/"+group11+"/"+group22))):
-                source_path=original_path+"/"+group11+"/"+group22+"/"+image
-                copy_path=lq_path+"/"+image
-                shutil.copy(source_path,copy_path)
-                count+=1
-            total_low_count+=count
-            print("# of lq data:", count)
+    for group11 in group1:
+        for i, group22 in enumerate(group2):
+            count =0
+            if i==0:
+                # crop_good
+                print("high quality images extracting - - -")
+                for image in tqdm(sorted(os.listdir(original_path+"/"+group11+"/"+group22))):
+                    source_path=original_path+"/"+group11+"/"+group22+"/"+image
+                    copy_path=hq_path+"/"+str(total_high_count).zfill(ldigit)+"."+file_sy
+                    shutil.copy(source_path,copy_path)
+                    count+=1
+                total_high_count+=count
+                print("# of hq data:", count)
 
-        else:
-            # degrade_good
-            print("degrade_good images extracting - - -")
-            for image in tqdm(sorted(os.listdir(original_path+"/"+group11+"/"+group22))):
-                source_path=original_path+"/"+group11+"/"+group22+"/"+image
-                copy_path=degraded_path+"/"+image
-                shutil.copy(source_path,copy_path)
-                count+=1
-            total_degrade_count+=count
-            print("# of degraded data:", count)
+            elif i==1:
+                # crop_usable
+                print("low quality images extracting - - -")
+                for image in tqdm(sorted(os.listdir(original_path+"/"+group11+"/"+group22))):
+                    source_path=original_path+"/"+group11+"/"+group22+"/"+image
+                    copy_path=lq_path+"/"+i+str(total_low_count).zfill(ldigit)+"."+file_sy
+                    shutil.copy(source_path,copy_path)
+                    count+=1
+                total_low_count+=count
+                print("# of lq data:", count)
+
+            else:
+                # degrade_good
+                print("degrade_good images extracting - - -")
+                for image in tqdm(sorted(os.listdir(original_path+"/"+group11+"/"+group22))):
+                    source_path=original_path+"/"+group11+"/"+group22+"/"+image
+                    copy_path=degraded_path+"/"+i+str(total_degrade_count).zfill(ldigit)+"."+file_sy
+                    shutil.copy(source_path,copy_path)
+                    count+=1
+                total_degrade_count+=count
+                print("# of degraded data:", count)
+
+
+else:
+    for group11 in group1:
+        for i, group22 in enumerate(group2):
+            count =0
+            if i==0:
+                # crop_good
+                print("high quality images extracting - - -")
+                for image in tqdm(sorted(os.listdir(original_path+"/"+group11+"/"+group22))):
+                    source_path=original_path+"/"+group11+"/"+group22+"/"+image
+                    copy_path=hq_path+"/"+image
+                    shutil.copy(source_path,copy_path)
+                    count+=1
+                total_high_count+=count
+                print("# of hq data:", count)
+
+            elif i==1:
+                # crop_usable
+                print("low quality images extracting - - -")
+                for image in tqdm(sorted(os.listdir(original_path+"/"+group11+"/"+group22))):
+                    source_path=original_path+"/"+group11+"/"+group22+"/"+image
+                    copy_path=lq_path+"/"+image
+                    shutil.copy(source_path,copy_path)
+                    count+=1
+                total_low_count+=count
+                print("# of lq data:", count)
+
+            else:
+                # degrade_good
+                print("degrade_good images extracting - - -")
+                for image in tqdm(sorted(os.listdir(original_path+"/"+group11+"/"+group22))):
+                    source_path=original_path+"/"+group11+"/"+group22+"/"+image
+                    copy_path=degraded_path+"/"+image
+                    shutil.copy(source_path,copy_path)
+                    count+=1
+                total_degrade_count+=count
+                print("# of degraded data:", count)
 
 print("-----------------------------------------------")
 print("total_high_count: ", total_high_count)
 print("total_low_count: ", total_low_count)
 print("total_degrade_count: ", total_degrade_count)
+
+
