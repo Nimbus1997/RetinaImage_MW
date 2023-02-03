@@ -30,8 +30,23 @@ import shutil
 
 
 # 0. augment 설정 ------------------
-# Mediwhale
+# # Mediwhale >>>>>>>>>>>
+# ### input ### 
+# # for training
+# rhq_img_path = "/home/guest1/ellen_code/PCENet-Image-Enhancement/data/get_low_quality/image/high_quality_image_pre_process/image"
+# rhq_mask_path = "/home/guest1/ellen_code/PCENet-Image-Enhancement/data/get_low_quality/image/high_quality_image_pre_process/mask"
+# degraded_path = "/home/guest1/ellen_code/PCENet-Image-Enhancement/data/get_low_quality/image/low_quality_image"
 
+# # for testing
+# rlq_img_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_pcenet/target_image" 
+# rlq_mask_path= "/home/guest1/ellen_data/UKB_quality_data2_combined/input_pcenet/target_mask"
+
+
+# ### output ### 
+# new_path="/home/guest1/ellen_data/UKB_quality_data2_combined/input_pcenet/ukb_512"
+
+
+# MIV >>>>>>>>>>>
 ### input ### 
 # for training
 rhq_img_path = "/home/guest1/ellen_code/PCENet-Image-Enhancement/data/get_low_quality/image/high_quality_image_pre_process/image"
@@ -44,16 +59,11 @@ rlq_mask_path= "/home/guest1/ellen_data/UKB_quality_data2_combined/input_pcenet/
 
 
 ### output ### 
-new_path="/home/guest1/ellen_data/UKB_quality_data2_combined/input_pcenet/ukb_512"
+new_path="/root/jieunoh/ellen_data/0_pce_input/ukb_512"
+
+
+
 imageformat="png" #원본 이미지 포멧
-
-# # MIV
-# rhq_path = "/root/jieunoh/ellen_data/isecret_eyeq_total_hq_512"
-# rlq_path = "/root/jieunoh/ellen_data/isecret_eyeq_total_lq_512" 
-# new_path="/root/jieunoh/ellen_data/0_cyclegan_input/cginput_eyeq_total"
-# imageformat="jpeg" #원본 이미지 포멧
-
-
 total_dataset=3
 
 # 0. CV 개수에 따라서 다르게
