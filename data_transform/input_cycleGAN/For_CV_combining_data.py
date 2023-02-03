@@ -40,7 +40,7 @@ h= 0
 
 ldigit= 4 # 4자리수로 맞추기
 changename=False
-# changename=True
+# changename=True # medi whale -> 이름이 겹쳐서 해야함 
 
 
 print("original_path:", original_path)

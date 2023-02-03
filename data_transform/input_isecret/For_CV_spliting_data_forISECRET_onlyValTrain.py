@@ -28,22 +28,22 @@ import shutil
 
 # 0. augment 설정 ------------------
 # Mediwhale
-# rhq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_20220623_512_n1000_hq"
-# rlq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_20220623_512_n1000_lq" 
-# path2="input_20221211_2_512_n1000"
-# path3="input_20221211_3_512_n1000"
-# gen_path2 = "/home/guest1/ellen_data/UKB_quality_data2_combined/"+path2
-# gen_path3 = "/home/guest1/ellen_data/UKB_quality_data2_combined/"+path3
+rhq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/hq_isecret_256_n1000"
+rlq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/lq_isecret_256_n1000" 
+degrade_path= '/home/guest1/ellen_data/UKB_quality_data2_combined/degrad_isecret_256_n1000'
+new_path="/home/guest1/ellen_data/UKB_quality_data2_combined/input_isecret/ukb_256"
+imageformat="jpeg" #원본 이미지 포멧
 
-# imageformat="jpg" #원본 이미지 포멧
 
 # MIV
-rhq_path = "/root/jieunoh/ellen_data/isecret_eyeq_total_hq_512"
-rlq_path = "/root/jieunoh/ellen_data/isecret_eyeq_total_lq_512" 
-degrade_path= '/root/jieunoh/ellen_data/isecret_eyeq_total_degraded_512'
-new_path="/root/jieunoh/ellen_data/0_isceret_input/isinput_eyeq_total"
+# rhq_path = "/root/jieunoh/ellen_data/isecret_eyeq_total_hq"
+# rlq_path = "/root/jieunoh/ellen_data/isecret_eyeq_total_lq" 
+# degrade_path= '/root/jieunoh/ellen_data/isecret_eyeq_total_degraded'
+# new_path="/root/jieunoh/ellen_data/0_isceret_input/isinput_eyeq_total"
 
-imageformat="jpeg" #원본 이미지 포멧
+# imageformat="jpeg" #원본 이미지 포멧
+
+
 total_dataset=3
 
 # 0. CV 개수에 따라서 다르게

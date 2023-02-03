@@ -12,10 +12,10 @@ from tqdm import tqdm
 # ----------------------------------------------------------------
 
 # 0. augment 설정 ------------------
-ori_path = "/root/jieunoh/ellen_data/isecret_eyeq_total_degraded"
-gen_path = "/root/jieunoh/ellen_data/isecret_eyeq_total_degraded_512" # change this
+ori_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/lq_20220623_512_n1000"
+gen_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/lq_isecret_256_n1000" # change this
 i=0
-resize=512
+resize=256
 
 # 0-1. path없으면 path생성 ------------------
 if not os.path.isdir(gen_path):
