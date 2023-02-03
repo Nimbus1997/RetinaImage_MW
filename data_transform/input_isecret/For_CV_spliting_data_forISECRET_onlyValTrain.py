@@ -38,9 +38,9 @@ import shutil
 # imageformat="jpg" #원본 이미지 포멧
 
 # MIV
-rhq_path = "/root/jieunoh/ellen_data/isecret_eyeq_total_hq"
-rlq_path = "/root/jieunoh/ellen_data/isecret_eyeq_total_lq" 
-degrade_path= '/root/jieunoh/ellen_data/isecret_eyeq_total_degraded'
+rhq_path = "/root/jieunoh/ellen_data/isecret_eyeq_total_hq_512"
+rlq_path = "/root/jieunoh/ellen_data/isecret_eyeq_total_lq_512" 
+degrade_path= '/root/jieunoh/ellen_data/isecret_eyeq_total_degraded_512'
 new_path="/root/jieunoh/ellen_data/0_isceret_input/isinput_eyeq_total"
 
 imageformat="jpeg" #원본 이미지 포멧
