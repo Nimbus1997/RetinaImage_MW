@@ -49,21 +49,22 @@ import shutil
 # MIV >>>>>>>>>>>
 ### input ### 
 # for training
-rhq_img_path = "/home/guest1/ellen_code/PCENet-Image-Enhancement/data/get_low_quality/image/high_quality_image_pre_process/image"
-rhq_mask_path = "/home/guest1/ellen_code/PCENet-Image-Enhancement/data/get_low_quality/image/high_quality_image_pre_process/mask"
-degraded_path = "/home/guest1/ellen_code/PCENet-Image-Enhancement/data/get_low_quality/image/low_quality_image"
+rhq_img_path = "/root/jieunoh/ellen_data/ingredient_pce_hq/image"
+rhq_mask_path = "/root/jieunoh/ellen_data/ingredient_pce_hq/mask"
+degraded_path = "/root/jieunoh/ellen_data/ingredient_pce_hq/degradation_image"
 
 # for testing
-rlq_img_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/input_pcenet/target_image" 
-rlq_mask_path= "/home/guest1/ellen_data/UKB_quality_data2_combined/input_pcenet/target_mask"
+rlq_img_path = "/root/jieunoh/ellen_data/ingredient_pce_lq/image" 
+rlq_mask_path= "/root/jieunoh/ellen_data/ingredient_pce_lq/mask"
 
 
 ### output ### 
-new_path="/root/jieunoh/ellen_data/0_pce_input/ukb_512"
+new_path="/root/jieunoh/ellen_data/0_pce_input/pcinput_eyeq_total"
 
 
 
-imageformat="png" #원본 이미지 포멧
+genimageformat="png" #생성 할 이미지 포멧/원본 이미지 포멧
+imageformat="jpeg" # 원본 이미지 포멧
 total_dataset=3
 
 # 0. CV 개수에 따라서 다르게
@@ -92,7 +93,9 @@ print("num_how_much_more_dataset:", total_dataset)
 for path in path_list:
     print("gen_path:", path)
 
-print("원본 이미지 포멧: ", imageformat)
+print("원본 이미지 포멧: ", imageformat, ",",genimageformat)
+print("생성할 이미지 포멧: ",genimageformat)
+
 
 print("-------------------------------")
 input("위의 값 확인후 enter 눌러서 진행 >>>") # 확인후 넘어가게 입력되면 넘어가게
@@ -169,15 +172,15 @@ for index, path in enumerate(path_list):
     train_count=0
 
     for rlq in tqdm(sorted(os.listdir(rlq_img_path))):
-        if imageformat in rlq:
+        if imageformat in rlq or genimageformat in rlq:
             source_path_img=rlq_img_path+'/'+rlq
-            source_path_mask=rhq_mask_path+'/'+rlq# have the same name as the image
+            source_path_mask=rlq_mask_path+'/'+rlq# have the same name as the image
 
         #2. real lq image 저장하기 ------------------
             # val= test (target)
             if (i>=val_start) and (i<(val_start+low_quality_block_size)): 
-                copy_path_img = path+"/target_image/"+rlq 
-                copy_path_mask=path+"/target_mask/"+rlq
+                copy_path_img = path+"/target_image/"+rlq.split(".")[0]+"."+genimageformat 
+                copy_path_mask=path+"/target_mask/"+rlq.split(".")[0]+"."+genimageformat
                 shutil.copy(source_path_img,copy_path_img)
                 shutil.copy(source_path_mask,copy_path_mask)
                 val_count+=1
@@ -190,7 +193,7 @@ print("[low quality end]==================================\n\n")
 
 # 2. real hq import image [B group] ------------------------------------------------------
 
-degraded_set=["0", "1"]
+degraded_set=["0"]
 
 high_quality_block_size=htotal_dataset/total_dataset
 print("------------------------------------------------------")
@@ -203,7 +206,7 @@ for index, path in enumerate(path_list):
     train_count=0
 
     for rhq in tqdm(sorted(os.listdir(rhq_img_path))):
-        if imageformat in rhq:
+        if imageformat in rhq or genimageformat in rhq:
             source_path_img=rhq_img_path+'/'+rhq
             source_path_mask=rhq_mask_path+'/'+rhq # have the same name as the image
 
@@ -212,8 +215,8 @@ for index, path in enumerate(path_list):
         #2. real lq image 저장하기 ------------------
             # val = test (target_gt -> 안쓸예정)
             if (i>=test_start) and (i<(test_start+high_quality_block_size)): 
-                copy_path_val_image=path+"/target_gt/"+rhq
-                copy_path_val_mask=path+"/target_gt_mask/"+rhq
+                copy_path_val_image=path+"/target_gt/"+rhq.split(".")[0]+"."+genimageformat
+                copy_path_val_mask=path+"/target_gt_mask/"+rhq.split(".")[0]+"."+genimageformat
                 shutil.copy(source_path_img,copy_path_val_image)
                 shutil.copy(source_path_mask,copy_path_val_mask)
 
@@ -221,14 +224,14 @@ for index, path in enumerate(path_list):
             
             # train (source)
             else:
-                copy_path_img = path+"/source_gt/"+rhq  
-                copy_path_mask = path+"/source_mask/"+rhq
+                copy_path_img = path+"/source_gt/"+rhq.split(".")[0]+"."+genimageformat  
+                copy_path_mask = path+"/source_mask/"+rhq.split(".")[0]+"."+genimageformat
                 shutil.copy(source_path_img,copy_path_img)
                 shutil.copy(source_path_mask,copy_path_mask)
 
                 for degarde in degraded_set:
-                    source_degrade_path = degraded_path+"/"+name+"-"+degarde+"."+imageformat
-                    copy_degrade_path = path+"/source_image/"+name+"-"+degarde+"."+imageformat
+                    source_degrade_path = degraded_path+"/"+name+"-"+degarde+"."+genimageformat
+                    copy_degrade_path = path+"/source_image/"+name+"-"+degarde+"."+genimageformat
                     shutil.copy(source_degrade_path,copy_degrade_path)
 
                 train_count += 1
