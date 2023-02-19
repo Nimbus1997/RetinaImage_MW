@@ -28,10 +28,10 @@ import shutil
 
 # 0. augment 설정 ------------------
 # Mediwhale
-rhq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/hq_isecret_256_n1000"
-rlq_path = "/home/guest1/ellen_data/UKB_quality_data2_combined/lq_isecret_256_n1000" 
-degrade_path= '/home/guest1/ellen_data/UKB_quality_data2_combined/degrad_isecret_256_n1000'
-new_path="/home/guest1/ellen_data/UKB_quality_data2_combined/input_isecret/ukb_256"
+rhq_path = "/root/jieunoh/ellen_data/isecret_eyeq_total_hq_512"
+rlq_path = "/root/jieunoh/ellen_data/isecret_eyeq_total_lq_512" 
+degrade_path= '/root/jieunoh/ellen_data/isecret_eyeq_total_degrade1'
+new_path="/root/jieunoh/ellen_data/0_isecret_input/isinput_eyeq_total"
 imageformat="jpeg" #원본 이미지 포멧
 
 
@@ -156,7 +156,8 @@ print("[low quality end]==================================\n\n")
 
 
 # 2. real hq import image [crop_good group2[0]] & degraded image ------------------------------------------------------
-degraded_set=['001', '100', '010', '110', '101', '011', '111']
+# degraded_set=['001', '100', '010', '110', '101', '011', '111']
+degraded_set=['001']
 
 high_quality_block_size=htotal_dataset/total_dataset
 print("HQ, degrade------------------------------------------------------")
