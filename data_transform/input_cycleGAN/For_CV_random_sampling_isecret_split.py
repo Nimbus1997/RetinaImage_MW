@@ -129,12 +129,12 @@ for index, path in enumerate(path_list):
                 train_count += 1
             #test
             elif (test_count<n_low_test):
-                copy_path_test=path+"/testA/"+rlq         
+                copy_path=path+"/testA/"+rlq         
                 shutil.copy(source_path,copy_path)
                 test_count += 1
             #val
             else:
-                copy_path_val = path+"/valA/"+rlq         
+                copy_path = path+"/valA/"+rlq         
                 shutil.copy(source_path,copy_path)
                 val_count += 1
     print("train/val/test: ", str(train_count),"/",str(val_count),"/",str(test_count))
@@ -165,12 +165,12 @@ for index, path in enumerate(path_list):
                 train_count += 1
             #test
             elif (test_count<n_high_test):
-                copy_path_test=path+"/testB/"+img         
+                copy_path=path+"/testB/"+img         
                 shutil.copy(source_path,copy_path)
                 test_count += 1
             #val
             else:
-                copy_path_val = path+"/valB/"+img         
+                copy_path = path+"/valB/"+img         
                 shutil.copy(source_path,copy_path)
                 val_count += 1
     print("train/val/test: ", str(train_count),"/",str(val_count),"/",str(test_count))
