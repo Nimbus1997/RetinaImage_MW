@@ -159,12 +159,12 @@ for index, path in enumerate(path_list):
 
         #2. real hq image 저장하기 ------------------
             # train
-            if (train_count<n_low_train):
+            if (train_count<n_high_train):
                 copy_path = path+"/trainB/"+img           
                 shutil.copy(source_path,copy_path)
                 train_count += 1
             #test
-            elif (test_count<n_low_test):
+            elif (test_count<n_high_test):
                 copy_path_test=path+"/testB/"+img         
                 shutil.copy(source_path,copy_path)
                 test_count += 1
