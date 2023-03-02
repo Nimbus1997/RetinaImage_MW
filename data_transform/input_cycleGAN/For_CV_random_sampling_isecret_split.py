@@ -127,13 +127,6 @@ for index, path in enumerate(path_list):
                 copy_path = path+"/trainA/"+rlq           
                 shutil.copy(source_path,copy_path)
                 train_count += 1
-
-
-                copy_path_val = path+"/valA/"+rlq 
-                copy_path_test=path+"/testA/"+rlq
-                shutil.copy(source_path,copy_path_val)
-                shutil.copy(source_path,copy_path_test)
-                val_count+=1
             #test
             elif (test_count<n_low_test):
                 copy_path_test=path+"/testA/"+rlq         
@@ -164,27 +157,20 @@ for index, path in enumerate(path_list):
         if imageformat in img:
             source_path=rhq_path+'/'+img
 
-        #2. real lq image 저장하기 ------------------
+        #2. real hq image 저장하기 ------------------
             # train
             if (train_count<n_low_train):
-                copy_path = path+"/trainA/"+img           
+                copy_path = path+"/trainB/"+img           
                 shutil.copy(source_path,copy_path)
                 train_count += 1
-
-
-                copy_path_val = path+"/valA/"+img 
-                copy_path_test=path+"/testA/"+img
-                shutil.copy(source_path,copy_path_val)
-                shutil.copy(source_path,copy_path_test)
-                val_count+=1
             #test
             elif (test_count<n_low_test):
-                copy_path_test=path+"/testA/"+img         
+                copy_path_test=path+"/testB/"+img         
                 shutil.copy(source_path,copy_path)
                 test_count += 1
             #val
             else:
-                copy_path_val = path+"/valA/"+img         
+                copy_path_val = path+"/valB/"+img         
                 shutil.copy(source_path,copy_path)
                 val_count += 1
     print("train/val/test: ", str(train_count),"/",str(val_count),"/",str(test_count))
